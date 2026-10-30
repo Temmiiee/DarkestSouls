@@ -1,0 +1,61 @@
+# --- Dossiers générés par Unreal ---
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+.idea/
+.vscode/
+
+# Plugins : mêmes dossiers générés
+Plugins/**/Binaries/
+Plugins/**/Intermediate/
+
+# --- Fichiers générés (solution / projet) ---
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+*.xcodeproj
+*.xcworkspace
+*.code-workspace
+.vsconfig
+
+# --- Compilation / debug ---
+*.pdb
+*.exp
+*.ilk
+*.lib
+*.obj
+*.o
+*.a
+*.dll
+*.exe
+*.dylib
+*.so
+*.ipa
+*.apk
+*.aab
+
+# --- Ressources de build à ne pas versionner ---
+Build/*
+!Build/Build.version
+!Build/**/*.png
+!Build/**/*.ico
+!Build/**/*.icns
+!Build/**/*.xml
+!Build/**/*.plist
+!Build/**/*.cs
+
+# --- Divers ---
+*.log
+*.tmp
+*.VC.VC.opendb
+*.DotSettings.user
+.DS_Store
+Thumbs.db
+*.pyc
+__pycache__/

@@ -1,0 +1,4 @@
+Content/
+  Blueprints/
+  Data/
+  UI/

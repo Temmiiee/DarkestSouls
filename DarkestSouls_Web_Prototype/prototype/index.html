@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Darkest Souls — Le Gué des Cendres</title>
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#e5d9c8;--muted:#9b8d7c;--ash:#4a3c32;--edge:#5d4738;
+  --ember:#c78045;--blood:#963c32;--ground:#100e0d;
+  --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-6:1.5rem;--space-8:2rem;
+  --r-small:2px;--r-medium:4px;--ease:cubic-bezier(.22,.72,.22,1);--quick:160ms;--state:280ms;
+  --text-xs:.66rem;--text-sm:.75rem;--text-md:.875rem;--text-lg:1rem;--text-xl:1.3rem;
+  --serif:Georgia,"Times New Roman",serif;--sans:Arial,Helvetica,sans-serif
+}
+*{box-sizing:border-box}html,body{width:100%;min-height:100%;margin:0}
+body{overflow:hidden;background:var(--ground);color:var(--ink);font:var(--text-md)/1.45 var(--serif)}button{font:inherit;color:inherit}
+.game{position:relative;isolation:isolate;display:grid;grid-template-rows:auto 1px minmax(240px,1fr) auto;min-height:100svh;padding:var(--space-6) clamp(18px,4vw,56px) var(--space-4);overflow:hidden;background:radial-gradient(ellipse at 66% 46%,#30221b 0,#211916 28%,#141110 58%,var(--ground) 100%)}
+.game:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#0b0a0add 0%,transparent 28%,transparent 72%,#0b0a0a99 100%),linear-gradient(0deg,#0a0909 0%,transparent 34%,#0a090955 100%)}
+.top-hud{display:grid;grid-template-columns:1fr minmax(180px,300px) 1fr;align-items:start;gap:var(--space-6);position:relative;z-index:2}
+.place{color:#b19c83;font:var(--text-xs)/1.35 var(--sans);letter-spacing:.18em;text-transform:uppercase;padding-top:var(--space-1)}
+.enemy-hud{text-align:center}.enemy-name{font-size:var(--text-lg);letter-spacing:.07em;color:#d3c1a9}.enemy-bar{height:4px;margin-top:var(--space-2);background:#3d2a25;border:1px solid #55362e;overflow:hidden}.enemy-fill{height:100%;width:100%;background:#9c4437;transition:width var(--state) var(--ease)}
+.enemy-tell{display:flex;justify-content:center;align-items:center;gap:var(--space-2);min-height:25px;margin-top:var(--space-2);color:#b39a7e;font:var(--text-xs) var(--sans);letter-spacing:.08em}.tell-mark{width:6px;height:6px;transform:rotate(45deg);background:var(--ember);opacity:.8}
+.thin-rule{height:1px;background:linear-gradient(90deg,transparent,#6c5140 20%,#6c5140 80%,transparent);opacity:.6;margin-top:var(--space-4)}
+.scene{position:relative;isolation:isolate;min-height:310px;overflow:hidden}.scene:before{content:"";position:absolute;z-index:-1;left:-5%;right:-5%;bottom:0;height:39%;background:linear-gradient(180deg,#17131000,#171310 56%,#100e0d);clip-path:polygon(0 32%,15% 25%,27% 38%,39% 16%,52% 31%,64% 11%,75% 28%,89% 18%,100% 30%,100% 100%,0 100%)}
+.scene:after{content:"";position:absolute;z-index:-1;left:0;right:0;bottom:8%;height:1px;background:linear-gradient(90deg,transparent,#76604b66 20%,#76604b88 60%,transparent)}
+.ruin{position:absolute;bottom:14%;opacity:.42;background:#100f0e;clip-path:polygon(8% 30%,20% 30%,20% 0,72% 0,72% 20%,92% 20%,92% 100%,8% 100%)}.ruin.left{left:4%;width:130px;height:210px}.ruin.right{right:7%;width:180px;height:250px;opacity:.31}.ruin:after{content:"";position:absolute;inset:30% 20% 15%;background:repeating-linear-gradient(90deg,transparent 0 22px,#342720 23px 27px,transparent 28px 48px)}
+.fighter{position:absolute;bottom:12%;width:clamp(110px,15vw,190px);height:clamp(190px,34vh,300px);transition:transform var(--state) var(--ease),filter var(--state) var(--ease)}.fighter.hero{left:20%;filter:drop-shadow(0 12px 13px #0009)}.fighter.enemy{right:20%;width:clamp(145px,19vw,230px);height:clamp(230px,41vh,360px);filter:drop-shadow(0 14px 16px #000b)}
+.fighter .cape{position:absolute;left:13%;bottom:0;width:75%;height:68%;background:linear-gradient(105deg,#111212,#24201d 48%,#111);clip-path:polygon(25% 0,73% 0,95% 100%,4% 100%)}.fighter .torso{position:absolute;left:29%;top:34%;width:46%;height:35%;background:linear-gradient(90deg,#181716,#34302a 52%,#171514);clip-path:polygon(25% 0,74% 0,100% 100%,0 100%)}.fighter .head{position:absolute;left:39%;top:12%;width:25%;height:18%;border-radius:46% 42% 38% 34%;background:linear-gradient(100deg,#171615,#756451 50%,#211d19);box-shadow:inset -6px -4px 0 #0d0c0b}.fighter .arm{position:absolute;left:60%;top:37%;width:13%;height:33%;background:#2b2722;transform:rotate(-16deg);transform-origin:top center;clip-path:polygon(25% 0,100% 8%,70% 100%,0 89%)}.fighter .weapon{position:absolute;left:73%;top:16%;width:3px;height:58%;background:linear-gradient(90deg,#504a40,#c4b29a,#4b463e);transform:rotate(27deg);transform-origin:bottom center;transition:transform var(--state) var(--ease)}
+.fighter.enemy .cape{background:linear-gradient(100deg,#171311,#36241f 50%,#120f0e);clip-path:polygon(18% 0,80% 0,100% 100%,0 90%)}.fighter.enemy .torso{left:26%;width:54%;height:39%;background:linear-gradient(90deg,#211713,#513128 52%,#1c1411);clip-path:polygon(20% 0,78% 0,100% 100%,0 100%)}.fighter.enemy .head{left:36%;top:9%;width:31%;height:18%;background:linear-gradient(110deg,#291915,#846044 52%,#291713)}.fighter.enemy .arm{left:68%;top:32%;height:39%;background:#34231d}.fighter.enemy .weapon{left:80%;top:13%;height:67%;transform:rotate(22deg)}.fighter.enemy.tell-low .weapon{transform:rotate(62deg)}.fighter.enemy.tell-high .weapon{transform:rotate(-18deg)}.fighter.enemy.hit{filter:brightness(1.32) drop-shadow(0 14px 16px #000b);transform:translateX(7px)}.fighter.hero .weapon{left:77%;top:30%;height:48%;transform:rotate(-31deg)}
+.scene-shadow{position:absolute;bottom:10%;width:190px;height:20px;border-radius:50%;background:#080707aa;filter:blur(8px)}.scene-shadow.hero-shadow{left:18%}.scene-shadow.enemy-shadow{right:17%;width:245px}
+.bottom-hud{position:relative;z-index:3;display:grid;grid-template-columns:minmax(155px,210px) minmax(420px,680px) minmax(90px,145px);align-items:end;justify-content:space-between;gap:clamp(12px,2.5vw,34px);padding-top:var(--space-3)}
+.player-hud{align-self:end;padding-bottom:5px}.player-name{font-size:var(--text-lg);letter-spacing:.06em;margin-bottom:var(--space-2)}.meter{margin-top:var(--space-2)}.meter-label{display:block;margin-bottom:3px;color:#b9a891;font:9px var(--sans);letter-spacing:.15em;text-transform:uppercase}.meter-track{height:5px;background:#322723;border:1px solid #574238;overflow:hidden}.meter-fill{height:100%;width:100%;transition:width var(--state) var(--ease)}.meter-fill.health{background:#a34338}.meter-fill.stamina{width:62.5%;background:#b9874b}
+.status-markers{display:flex;gap:7px;min-height:18px;margin-top:var(--space-2)}.status-marker{display:none;align-items:center;gap:5px;color:#c1a783;font:9px var(--sans);letter-spacing:.1em;text-transform:uppercase}.status-marker.on{display:flex}.status-marker i{width:7px;height:7px;border:1px solid var(--ember);transform:rotate(45deg);display:inline-block}
+.control-zone{min-width:0}.queue{display:flex;justify-content:center;align-items:center;gap:var(--space-2);min-height:40px;margin:0 auto var(--space-2)}.queue-slot{width:34px;height:34px;border:1px solid #594638;background:#151211;display:grid;place-items:center;color:#d0b088;font-size:15px;position:relative}.queue-slot.empty{border-style:dashed;opacity:.48}.queue-slot button{position:absolute;inset:-1px;border:0;background:transparent;cursor:pointer;color:transparent}.queue-slot button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}.queue-slot button:hover{background:#ffffff0b;color:#d4b18b}
+.hand{display:grid;grid-template-columns:repeat(5,minmax(72px,1fr));gap:2px;border-top:1px solid #594638;border-bottom:1px solid #594638;background:#0e0c0bbf}.card{position:relative;min-height:80px;padding:var(--space-2) var(--space-1);border:0;border-right:1px solid #392c25;border-radius:0;background:transparent;text-align:center;cursor:pointer;transition:background var(--quick) var(--ease),transform var(--quick) var(--ease),color var(--quick) var(--ease)}.card:last-child{border-right:0}.card:hover:not(:disabled){background:#281d18;transform:translateY(-3px)}.card:focus-visible,.commit:focus-visible,.cancel:focus-visible,.restart:focus-visible{outline:2px solid var(--ember);outline-offset:2px}.card:disabled{opacity:.38;cursor:not-allowed}.card.selected{background:#33241b;box-shadow:inset 0 -2px var(--ember)}.card-glyph{display:block;color:#d2aa7a;font-size:20px;line-height:1.15}.card-name{display:block;margin-top:var(--space-1);font-size:var(--text-sm);line-height:1.2;color:#e1d3c1}.cost-marks{display:block;min-height:10px;margin-top:var(--space-1);color:#d5a669;font:8px/1 var(--sans);letter-spacing:2px}.cost-marks.unknown{color:#76685a;letter-spacing:0}.queue-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.commit-zone{display:flex;flex-direction:column;align-items:stretch;gap:var(--space-2)}.commit{position:relative;min-height:43px;overflow:hidden;border:1px solid #8a5c39;border-radius:var(--r-small);background:#38251b;color:#e5d1b5;padding:var(--space-2) var(--space-3);cursor:pointer;font:10px var(--sans);letter-spacing:.14em;text-transform:uppercase;transition:background var(--quick) var(--ease),border-color var(--quick) var(--ease)}.commit:hover:not(:disabled){background:#4a2f20;border-color:#b37a4a}.commit:disabled{opacity:.42;cursor:not-allowed}.commit span{position:relative;z-index:1}.commit-progress{position:absolute;left:0;bottom:0;height:2px;width:0;background:#d29a5f;transition:width var(--quick) linear}.cancel{border:0;background:none;color:#938272;padding:3px;cursor:pointer;font:9px var(--sans);letter-spacing:.12em;text-transform:uppercase}.cancel:hover:not(:disabled){color:#dfc8a8}.cancel:disabled{opacity:.3;cursor:not-allowed}
+.message{position:absolute;left:50%;bottom:calc(100% + 22px);transform:translateX(-50%);min-height:24px;color:#d6c3aa;text-align:center;font-size:var(--text-md);text-shadow:0 2px 8px #000;opacity:0;transition:opacity var(--state) var(--ease);pointer-events:none;white-space:nowrap}.message.show{opacity:1}
+.end-screen{position:fixed;inset:0;z-index:10;display:none;place-items:center;background:#080707d9;padding:var(--space-4)}.end-screen.show{display:grid}.end-card{width:min(390px,100%);padding:var(--space-8);border:1px solid #624935;border-radius:var(--r-small);background:#171310;text-align:center;box-shadow:0 16px 50px #0009}.end-title{font-size:var(--text-xl);font-weight:normal;letter-spacing:.05em;margin:0 0 var(--space-2)}.end-copy{color:#b8a790;margin:0 0 var(--space-6);font-size:var(--text-md)}.restart{border:1px solid #8a5c39;border-radius:var(--r-small);background:#38251b;color:#e5d1b5;padding:var(--space-3) var(--space-6);cursor:pointer;font:10px var(--sans);letter-spacing:.14em;text-transform:uppercase}.restart:hover{background:#4a2f20}
+@media(max-width:900px){.bottom-hud{grid-template-columns:140px minmax(360px,1fr);gap:var(--space-3)}.commit-zone{grid-column:2;flex-direction:row;align-items:center}.commit{flex:1}.player-hud{grid-row:1/3;align-self:end}.fighter.hero{left:13%}.fighter.enemy{right:13%}.scene-shadow.hero-shadow{left:11%}.scene-shadow.enemy-shadow{right:10%}}
+@media(max-width:620px){body{overflow:auto}.game{min-height:100svh;padding:var(--space-4) var(--space-3);grid-template-rows:auto 1px minmax(280px,1fr) auto}.top-hud{grid-template-columns:1fr minmax(125px,190px);gap:var(--space-2)}.place{font-size:9px}.enemy-hud{grid-column:2;grid-row:1/3}.enemy-name{font-size:var(--text-sm)}.enemy-tell{font-size:9px;text-align:center}.thin-rule{margin-top:var(--space-2)}.scene{min-height:300px}.fighter.hero{left:4%;bottom:11%;width:110px;height:190px}.fighter.enemy{right:3%;bottom:11%;width:145px;height:245px}.ruin.left{left:-3%;width:90px;height:140px}.ruin.right{right:-8%;width:120px;height:180px}.scene-shadow.hero-shadow{left:0;width:120px}.scene-shadow.enemy-shadow{right:-3%;width:160px}.bottom-hud{grid-template-columns:1fr;gap:var(--space-2);padding-top:var(--space-2)}.player-hud{grid-row:auto;display:grid;grid-template-columns:95px 1fr;column-gap:var(--space-3);align-items:center;padding:0}.player-name{grid-row:1/4;font-size:var(--text-md);margin:0}.meter{margin-top:3px}.meter-label{font-size:8px}.status-markers{display:none}.control-zone{grid-row:2}.queue{min-height:32px;margin-bottom:4px}.queue-slot{width:29px;height:29px}.hand{grid-template-columns:repeat(5,minmax(55px,1fr))}.card{min-height:67px;padding:5px 2px}.card-glyph{font-size:17px}.card-name{font-size:10px}.cost-marks{letter-spacing:1px}.commit-zone{grid-column:1;grid-row:3}.message{bottom:calc(100% + 14px);font-size:12px;white-space:normal;width:100%}}
+@media(max-height:640px) and (min-width:621px){.game{padding-top:12px;padding-bottom:10px}.scene{min-height:220px}.fighter.hero{height:210px}.fighter.enemy{height:250px}.card{min-height:68px}.queue{min-height:32px}.player-hud{padding-bottom:0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="game" aria-label="Duel au Gué des Cendres">
+  <header class="top-hud">
+    <div class="place">Le Gué des Cendres</div>
+    <div class="enemy-hud">
+      <div class="enemy-name">Veilleur creux</div>
+      <div class="enemy-bar" role="img" id="enemy-health-aria" aria-label="Vitalité du Veilleur : indemne"><div class="enemy-fill" id="enemy-health"></div></div>
+      <div class="enemy-tell"><i class="tell-mark" aria-hidden="true"></i><span id="tell">Le Veilleur lève son arme.</span></div>
+    </div>
+    <div aria-hidden="true"></div>
+  </header>
+  <div class="thin-rule" aria-hidden="true"></div>
+  <section class="scene" aria-label="Champ de bataille">
+    <div class="ruin left" aria-hidden="true"></div><div class="ruin right" aria-hidden="true"></div>
+    <div class="fighter hero" aria-hidden="true"><span class="cape"></span><span class="torso"></span><span class="head"></span><span class="arm"></span><span class="weapon"></span></div>
+    <div class="fighter enemy tell-low" id="enemy-figure" aria-hidden="true"><span class="cape"></span><span class="torso"></span><span class="head"></span><span class="arm"></span><span class="weapon"></span></div>
+    <div class="scene-shadow hero-shadow" aria-hidden="true"></div><div class="scene-shadow enemy-shadow" aria-hidden="true"></div>
+  </section>
+  <section class="bottom-hud" aria-label="Combat">
+    <div class="player-hud">
+      <div class="player-name">Le Champion</div>
+      <div class="meter"><span class="meter-label">Vitalité</span><div class="meter-track" role="img" id="player-health-aria" aria-label="Votre vitalité : intacte"><div class="meter-fill health" id="player-health"></div></div></div>
+      <div class="meter"><span class="meter-label">Souffle</span><div class="meter-track" role="img" aria-label="Souffle disponible"><div class="meter-fill stamina" id="stamina"></div></div></div>
+      <div class="status-markers"><span class="status-marker" id="guard-marker"><i></i>Garde levée</span><span class="status-marker" id="dodge-marker"><i></i>Pas prêt</span></div>
+    </div>
+    <div class="control-zone">
+      <div class="message" id="message" role="status" aria-live="polite"></div>
+      <div class="queue" id="queue" aria-label="File des gestes"><span class="queue-label">File vide</span><span class="queue-slot empty" aria-hidden="true"></span><span class="queue-slot empty" aria-hidden="true"></span><span class="queue-slot empty" aria-hidden="true"></span></div>
+      <div class="hand" id="hand" aria-label="Gestes disponibles"></div>
+    </div>
+    <div class="commit-zone"><button class="commit" id="commit" disabled><span id="commit-label">Engager</span><i class="commit-progress" id="progress" aria-hidden="true"></i></button><button class="cancel" id="cancel" disabled>Annuler</button></div>
+  </section>
+</main>
+<div class="end-screen" id="end-screen" role="dialog" aria-modal="true" aria-labelledby="end-title"><div class="end-card"><h1 class="end-title" id="end-title">Le duel s’achève</h1><p class="end-copy" id="end-copy"></p><button class="restart" id="restart">Reprendre le chemin</button></div></div>
+<script>
+(()=>{
+'use strict';
+const cards=[
+  {id:'quick',name:'Frappe vive',icon:'↗',cost:1,damage:3},
+  {id:'heavy',name:'Frappe lourde',icon:'⚔',cost:4,damage:7},
+  {id:'guard',name:'Garde',icon:'◈',cost:2,block:5},
+  {id:'dodge',name:'Pas de côté',icon:'⇢',cost:2,dodge:true},
+  {id:'recover',name:'Reprendre souffle',icon:'⌂',cost:0,recover:3}
+];
+const state={player:24,enemy:22,stamina:5,maxStamina:8,guard:0,dodge:false,turn:1,encounter:0,queue:[],known:new Set(),busy:false,ended:false,messageTimer:null};
+const $=id=>document.getElementById(id);
+const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+const playerMood=()=>state.player>18?'intacte':state.player>10?'blessée':state.player>4?'chancelante':'à bout';
+const enemyMood=()=>state.enemy>16?'indemne':state.enemy>9?'touché':state.enemy>4?'vacillant':'à terre';
+function showMessage(text){$('message').textContent=text;$('message').classList.add('show');clearTimeout(state.messageTimer);state.messageTimer=setTimeout(()=>$('message').classList.remove('show'),1550)}
+function marks(cost){return cost===0?'<span aria-hidden="true">○</span>':'<span aria-hidden="true">'+('●'.repeat(cost))+'</span>'}
+function render(){
+  $('player-health').style.width=`${state.player/24*100}%`;$('enemy-health').style.width=`${state.enemy/22*100}%`;
+  $('player-health-aria').setAttribute('aria-label',`Votre vitalité : ${playerMood()}`);$('enemy-health-aria').setAttribute('aria-label',`Vitalité du Veilleur : ${enemyMood()}`);
+  $('stamina').style.width=`${state.stamina/state.maxStamina*100}%`;
+  const heavy=state.turn%2===0;$('tell').textContent=heavy?'Il engage son épaule.':'Le Veilleur lève son arme.';
+  $('enemy-figure').classList.toggle('tell-high',heavy);$('enemy-figure').classList.toggle('tell-low',!heavy);
+  $('guard-marker').classList.toggle('on',state.guard>0);$('dodge-marker').classList.toggle('on',state.dodge);
+  $('dodge-marker').lastChild.textContent='Pas de côté prêt';
+  $('queue').innerHTML=Array.from({length:3},(_,i)=>{
+    if(i>=state.queue.length)return '<span class="queue-slot empty" aria-hidden="true"></span>';
+    const card=cards.find(c=>c.id===state.queue[i]);return `<span class="queue-slot" title="${card.name}">${card.icon}<button type="button" data-remove="${i}" aria-label="Retirer ${card.name} de la file"></button></span>`
+  }).join('');
+  $('hand').innerHTML=cards.map(card=>{
+    const learned=state.known.has(card.id),selected=state.queue.includes(card.id);
+    const costLabel=learned?(card.cost===0?'sans dépense':card.cost<2?'faible':card.cost<4?'moyen':'élevé'):'inconnu';
+    return `<button class="card ${selected?'selected':''}" type="button" data-card="${card.id}" ${state.queue.length>=3||state.busy||state.ended?'disabled':''} aria-label="${card.name}, coût ${costLabel}"><span class="card-glyph" aria-hidden="true">${card.icon}</span><span class="card-name">${card.name}</span><span class="cost-marks ${learned?'':'unknown'}" aria-hidden="true">${learned?marks(card.cost):'◌'}</span></button>`
+  }).join('');
+  $('commit').disabled=state.queue.length===0||state.busy||state.ended;$('cancel').disabled=state.queue.length===0||state.busy||state.ended;
+  $('commit-label').textContent=state.busy?'Les gestes s’exécutent…':'Engager';
+}
+function finish(win){state.ended=true;state.busy=false;$('end-title').textContent=win?'Le passage s’ouvre':'Le Champion s’effondre';$('end-copy').textContent=win?'Le Veilleur ne barre plus la route.':'La cendre recouvre le chemin. Recommencez si vous le souhaitez.';$('end-screen').classList.add('show');render()}
+function enqueue(id){if(state.queue.length>=3||state.busy||state.ended){if(state.queue.length>=3)showMessage('La séquence est scellée.');return}state.queue.push(id);render()}
+async function resolve(){
+  if(!state.queue.length||state.busy||state.ended)return;
+  state.busy=true;const actions=[...state.queue];state.queue=[];render();
+  for(let i=0;i<actions.length;i++){
+    if(state.enemy<=0)break;
+    const card=cards.find(c=>c.id===actions[i]);state.known.add(card.id);$('progress').style.width=`${(i/actions.length)*100}%`;
+    await new Promise(r=>setTimeout(r,410));
+    if(state.stamina<card.cost){showMessage('Votre souffle vous manque.');render();$('progress').style.width=`${((i+1)/actions.length)*100}%`;continue}
+    state.stamina-=card.cost;
+    if(card.damage){state.enemy=clamp(state.enemy-card.damage,0,22);$('enemy-figure').classList.add('hit');setTimeout(()=>$('enemy-figure').classList.remove('hit'),240);showMessage(card.id==='heavy'?'Le Veilleur vacille.':'La lame trouve une ouverture.')}
+    if(card.block){state.guard=Math.min(8,state.guard+card.block);showMessage('Vous tenez votre garde.')}
+    if(card.dodge){state.dodge=true;showMessage('Un pas vous met hors de portée.')}
+    if(card.recover){const before=state.stamina;state.stamina=Math.min(state.maxStamina,state.stamina+card.recover);showMessage(state.stamina>before?'Un souffle revient.':'Le souffle ne peut aller plus loin.')}
+    $('progress').style.width=`${((i+1)/actions.length)*100}%`;render();
+  }
+  $('progress').style.width='0%';
+  if(state.enemy<=0){if(state.encounter===0){state.encounter=1;state.enemy=22;state.turn=1;state.guard=0;state.dodge=false;$('enemy-figure').classList.remove('hit');state.busy=false;render();showMessage('Le Veilleur se relève. Votre souffle reste entamé.');return}finish(true);return}
+  await new Promise(r=>setTimeout(r,300));const heavy=state.turn%2===0,attack=heavy?7:5;
+  if(state.dodge){showMessage('Le Veilleur frappe dans le vide.');state.dodge=false}
+  else{const blocked=Math.min(state.guard,attack);state.player=clamp(state.player-(attack-blocked),0,24);showMessage(blocked===attack?'La garde tient.':blocked?'Le coup mord malgré la garde.':'Le coup vous atteint.')}
+  state.guard=0;if(state.player<=0){finish(false);return}
+  state.stamina=Math.min(state.maxStamina,state.stamina+2);state.turn++;state.busy=false;render();
+}
+$('hand').addEventListener('click',e=>{const button=e.target.closest('[data-card]');if(button)enqueue(button.dataset.card)});
+$('queue').addEventListener('click',e=>{const button=e.target.closest('[data-remove]');if(button&&!state.busy){state.queue.splice(Number(button.dataset.remove),1);render()}});
+$('commit').addEventListener('click',resolve);$('cancel').addEventListener('click',()=>{if(!state.busy){state.queue=[];render()}});$('restart').addEventListener('click',()=>location.reload());
+render();
+})();
+</script>
+</body>
+</html>
